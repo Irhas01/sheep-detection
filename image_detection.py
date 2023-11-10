@@ -1,10 +1,11 @@
 import os
 from ultralytics import YOLO
 import cv2
+from datetime import datetime
 
 IMAGES_DIR = os.path.join('.', 'images')
 
-image_path = os.path.join('D:/TIF/Semester 5/Project Peternakan Kambing/detection/test/k.jpg')  # Ganti dengan jalur gambar yang ingin Anda deteksi
+image_path = os.path.join('D:/TIF/Semester 5/Project Peternakan Kambing/detection/test/kambing (198).jpg')  # Ganti dengan jalur gambar yang ingin Anda deteksi
 
 model_path = os.path.join('.', 'runs', 'detect', 'train', 'weights', 'last.pt')
 
@@ -29,10 +30,15 @@ for result in results.boxes.data.tolist():
         cv2.putText(image, label, (int(x1), int(y1 - 10)),
                     cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
 
+# Buat nama berkas dengan timestamp
+timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+
 # Simpan gambar hasil deteksi ke direktori yang ditentukan
 output_dir = 'D:/TIF/Semester 5/Project Peternakan Kambing/detection/hasil'
-output_image_path = os.path.join(output_dir, 'kambing_detection.jpg')
-os.makedirs(output_dir, exist_ok=True)  # Pastikan direktori output ada atau buat jika belum ada
+output_image_path = os.path.join(output_dir, f'kambing_detection_{timestamp}.jpg')
+
+# Pastikan direktori output ada atau buat jika belum ada
+os.makedirs(output_dir, exist_ok=True)
 cv2.imwrite(output_image_path, image)
 
 cv2.destroyAllWindows()
