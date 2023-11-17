@@ -3,7 +3,7 @@ from ultralytics import YOLO
 import cv2
 from datetime import datetime
 import numpy as np
-from rembg import remove
+# from rembg import remove
 from PIL import Image
 
 def estimate_weight(length_mm, breadth_mm):
@@ -16,7 +16,7 @@ def estimate_weight(length_mm, breadth_mm):
 model = YOLO('D:/TIF/Semester 5/Project Peternakan Kambing/detection/runs/detect/train5/weights/best.pt')
 
 # Path to the input image
-input_path = ('D:/TIF/Semester 5/Project Peternakan Kambing/detection/test/kambing (198).jpg')
+input_path = ('D:/TIF/Semester 5/Project Peternakan Kambing/detection/test/kambing (127).jpg')
 
 # Load the input image
 input_image = cv2.imread(input_path)
@@ -42,16 +42,16 @@ for result in results.boxes.data.tolist():
         # Create a mask for the detected object
         mask[int(y1):int(y2), int(x1):int(x2)] = 255
 
-# Use the mask to remove the background from the input image
+#   the mask to remove the background from the input image
 input_image_no_bg = cv2.bitwise_and(input_image, input_image, mask=mask)
 
 # Get the estimated weight of the detected object
 gray = cv2.cvtColor(input_image_no_bg, cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray, 0, 0)
-kernel = np.ones((10, 10), np.uint8)
-closing = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
-kernel = np.ones((15, 15), np.uint8)
-cleaned = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel)
+kernel1 = np.ones((10, 10), np.uint8)
+closing = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel1)
+kernel2 = np.ones((15, 15), np.uint8)
+cleaned = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel2)
 segmented_frame = np.uint8(cleaned)
 contours, _ = cv2.findContours(segmented_frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
