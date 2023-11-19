@@ -15,7 +15,7 @@ def estimate_weight(length_mm, breadth_mm):
 model_first = YOLO('D:/TIF/Semester 5/Project Peternakan Kambing/detection/runs/detect/train/weights/best.pt')
 
 # Path to the input image
-input_path = ('D:/TIF/Semester 5/Project Peternakan Kambing/detection/test/kambing (198).jpg')
+input_path = ('D:/TIF/Semester 5/Project Peternakan Kambing/detection/test/kambing (127).jpg')
 
 # Load the input image
 input_image = cv2.imread(input_path)
@@ -42,29 +42,6 @@ for result_first in results_first.boxes.data.tolist():
 
 # Apply the mask to remove the background from the input image in the first detection
 input_image_no_bg_first = cv2.bitwise_and(input_image, input_image, mask=mask_first)
-
-input_image_no_bg_pil = Image.fromarray(cv2.cvtColor(input_image_no_bg_first, cv2.COLOR_BGR2RGB))
-input_image_no_bg_removed = remove(np.array(input_image_no_bg_pil))
-
-gray_first = cv2.cvtColor(input_image_no_bg_first, cv2.COLOR_RGB2GRAY)
-
-# Apply Gaussian Blur to reduce noise
-gray_blurred_first = cv2.GaussianBlur(gray_first, (15, 15), 0)
-
-# Apply Bilateral Filter
-gray_filtered_first = cv2.bilateralFilter(gray_first, 15, 75, 75)
-
-# Apply Median Blur
-gray_median_blurred_first = cv2.medianBlur(gray_first, 5)
-
-# Apply additional image processing (e.g., edge detection and morphological operations)
-edges_first = cv2.Canny(gray_median_blurred_first, 0, 0)
-kernel_first = np.ones((10, 10), np.uint8)
-closing_first = cv2.morphologyEx(edges_first, cv2.MORPH_CLOSE, kernel_first)
-kernel_first = np.ones((15, 15), np.uint8)
-cleaned_first = cv2.morphologyEx(closing_first, cv2.MORPH_OPEN, kernel_first)
-segmented_frame_first = np.uint8(cleaned_first)
-contours_first, _ = cv2.findContours(segmented_frame_first, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 # Load YOLO model for the second detection
 model_second = YOLO('D:/TIF/Semester 5/Project Peternakan Kambing/detection/runs/detect/train5/weights/best.pt')
@@ -97,8 +74,7 @@ for result_second in results_second.boxes.data.tolist():
             length_mm_second = w_second
             breadth_mm_second = h_second
             estimated_weight_second = estimate_weight(length_mm_second, breadth_mm_second)
-            cv2.putText(input_image, "Sheep (Second Detection)", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.putText(input_image, f"Weight (Second Detection): {estimated_weight_second:.2f} kg", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(input_image, f"Weight : {estimated_weight_second:.2f} kg", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
 # Apply the mask to remove the background from the input image in the second detection
 input_image_no_bg_second = cv2.bitwise_and(input_image, input_image, mask=mask_second)
@@ -128,7 +104,7 @@ cleaned = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel)
 segmented_frame = np.uint8(cleaned)
 contours, _ = cv2.findContours(segmented_frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-# Display Detection Sheep  w
+# Display Detection Sheep  
 cv2.imshow("First Detection Results", input_image_no_bg_first)
 
 # Display Grayscale image
@@ -140,10 +116,10 @@ ret, binary_image = cv2.threshold(gray_median_blurred_second, 127, 255, cv2.THRE
 cv2.imshow("Binary Image", binary_image)
 
 # Display the final image with object detection, background removal, and weight estimation
-cv2.imshow("Object Detection with Background Removal and Weight Estimation", input_image_no_bg_removed)
+cv2.imshow("Object Detection with Background Removal and Weight Estimation", input_image)
 
 # Display the original image
-cv2.imshow("Original Image", input_image)
+# cv2.imshow("Original Image", input_image)
 
 # Wait for user input and close all windows
 cv2.waitKey(0)
