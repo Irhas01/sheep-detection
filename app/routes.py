@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request,jsonify, send_from_directory
 from datetime import datetime
-from sheepDetection.gab2 import process_image
-from sheepDetection.get_umur import get_kambing
+from imageProcess.gab2 import process_image
+from imageProcess.get_umur import get_kambing
 
 # from exponen.co2 import get_forecast_co2
 
